@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using LeagueApi.Data;
 using LeagueApi.DTOs;
+using LeagueApi.Models;
 
 namespace LeagueApi.Controllers
 {
@@ -35,5 +36,64 @@ namespace LeagueApi.Controllers
 
             return Ok(players);
         }
+        // GET: api/players/{id}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<PlayerDTO>> GetPlayer(int id)
+        {
+            var player = await _context.Players.FindAsync(id);
+
+            if (player == null)
+                return NotFound($"Player with ID {id} not found.");
+
+            return Ok(new PlayerDTO
+            {
+                Id = player.Id,
+                FirstName = player.FirstName,
+                LastName = player.LastName,
+                Email = player.Email,
+                PhoneNumber = player.PhoneNumber,
+                DateJoined = player.DateJoined,
+                FargoRate = player.FargoRate
+            });
+        }
+
+        // POST: api/players
+        [HttpPost]
+        public async Task<ActionResult<PlayerDTO>> CreatePlayer(CreatePlayerDTO dto)
+        {
+            // Check for duplicate email
+            var exists = await _context.Players
+                .AnyAsync(p => p.Email == dto.Email.ToLower());
+
+            if (exists)
+                return Conflict($"A player with email {dto.Email} already exists.");
+
+            var player = new Player
+            {
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                Email = dto.Email.ToLower(),
+                PhoneNumber = dto.PhoneNumber,
+                DateJoined = DateTime.UtcNow,
+                FargoRate = dto.FargoRate
+            };
+
+            _context.Players.Add(player);
+            await _context.SaveChangesAsync();
+
+            var result = new PlayerDTO
+            {
+                Id = player.Id,
+                FirstName = player.FirstName,
+                LastName = player.LastName,
+                Email = player.Email,
+                PhoneNumber = player.PhoneNumber,
+                DateJoined = player.DateJoined,
+                FargoRate = player.FargoRate
+            };
+
+            return CreatedAtAction(nameof(GetPlayer), new { id = player.Id }, result);
+        }
+
     }
 }

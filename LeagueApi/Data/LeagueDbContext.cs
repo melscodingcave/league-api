@@ -30,6 +30,10 @@ namespace LeagueApi.Data
                 .WithMany()
                 .HasForeignKey(m => m.WinnerId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Player>()
+                .HasIndex(p => p.Email)
+                .IsUnique();
         }
     }
 }
