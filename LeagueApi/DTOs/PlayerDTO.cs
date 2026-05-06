@@ -9,5 +9,6 @@
         public string? PhoneNumber { get; set; }
         public DateTime DateJoined { get; set; }
         public int? FargoRate { get; set; }
+        public bool IsActive { get; set; }
     }
 }

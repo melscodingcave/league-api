@@ -2,26 +2,24 @@
 
 namespace LeagueApi.DTOs
 {
-    public class CreatePlayerDTO
+    public class UpdatePlayerDTO
     {
-        [Required]
         [MaxLength(50)]
-        public string FirstName { get; set; } = string.Empty;
+        public string? FirstName { get; set; }
 
-        [Required]
         [MaxLength(50)]
-        public string LastName { get; set; } = string.Empty;
+        public string? LastName { get; set; }
 
-        [Required]
         [EmailAddress]
         [MaxLength(100)]
-        public string Email { get; set; } = string.Empty;
+        public string? Email { get; set; }
 
         [Phone]
         [MaxLength(20)]
         public string? PhoneNumber { get; set; }
 
         public int? FargoRate { get; set; }
-        public bool isActive { get; set; } = true;
+
+        public bool? IsActive { get; set; }
     }
 }

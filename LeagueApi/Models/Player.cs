@@ -27,5 +27,7 @@ namespace LeagueApi.Models
         public DateTime DateJoined { get; set; } = DateTime.UtcNow;
 
         public int? FargoRate { get; set; }
+
+        public bool IsActive { get; set; } = true;
     }
 }
