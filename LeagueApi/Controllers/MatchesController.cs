@@ -182,5 +182,20 @@ namespace LeagueApi.Controllers
                 DatePlayed = match.DatePlayed
             });
         }
+
+        // DELETE: api/matches/{id}
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteMatch(int id)
+        {
+            var match = await _context.Matches.FindAsync(id);
+
+            if (match == null)
+                return NotFound($"Match with ID {id} not found.");
+
+            _context.Matches.Remove(match);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
