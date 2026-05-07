@@ -7,8 +7,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<LeagueDbContext>(options =>
-    options.UseSqlServer(builder.Configuration
-        .GetConnectionString("DefaultConnection")));
+{
+    var connectionString = builder.Configuration
+        .GetConnectionString("DefaultConnection");
+
+    if (connectionString!.Contains("Host="))
+        options.UseNpgsql(connectionString)
+               .ConfigureWarnings(w => w.Ignore(
+                   Microsoft.EntityFrameworkCore.Diagnostics
+                   .RelationalEventId.PendingModelChangesWarning));
+    else
+        options.UseSqlServer(connectionString);
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -27,5 +37,12 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider
+        .GetRequiredService<LeagueDbContext>();
+    db.Database.Migrate();
+}
 
 app.Run();

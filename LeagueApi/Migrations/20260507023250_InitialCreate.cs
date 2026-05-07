@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -15,14 +16,15 @@ namespace LeagueApi.Migrations
                 name: "Players",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    DateJoined = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FargoRate = table.Column<int>(type: "int", nullable: true)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    FirstName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    DateJoined = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    FargoRate = table.Column<int>(type: "integer", nullable: true),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -33,17 +35,17 @@ namespace LeagueApi.Migrations
                 name: "Matches",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PlayerOneId = table.Column<int>(type: "int", nullable: false),
-                    PlayerTwoId = table.Column<int>(type: "int", nullable: false),
-                    WinnerId = table.Column<int>(type: "int", nullable: true),
-                    PlayerOneScore = table.Column<int>(type: "int", nullable: false),
-                    PlayerTwoScore = table.Column<int>(type: "int", nullable: false),
-                    PlayerOneRace = table.Column<int>(type: "int", nullable: false),
-                    PlayerTwoRace = table.Column<int>(type: "int", nullable: false),
-                    GameType = table.Column<int>(type: "int", nullable: false),
-                    DatePlayed = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    PlayerOneId = table.Column<int>(type: "integer", nullable: false),
+                    PlayerTwoId = table.Column<int>(type: "integer", nullable: false),
+                    WinnerId = table.Column<int>(type: "integer", nullable: true),
+                    PlayerOneScore = table.Column<int>(type: "integer", nullable: false),
+                    PlayerTwoScore = table.Column<int>(type: "integer", nullable: false),
+                    PlayerOneRace = table.Column<int>(type: "integer", nullable: false),
+                    PlayerTwoRace = table.Column<int>(type: "integer", nullable: false),
+                    GameType = table.Column<int>(type: "integer", nullable: false),
+                    DatePlayed = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -82,6 +84,12 @@ namespace LeagueApi.Migrations
                 name: "IX_Matches_WinnerId",
                 table: "Matches",
                 column: "WinnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Players_Email",
+                table: "Players",
+                column: "Email",
+                unique: true);
         }
 
         /// <inheritdoc />
