@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using LeagueApi.Data;
 using LeagueApi.DTOs;
+using LeagueApi.Models;
 
 namespace LeagueApi.Controllers
 {
@@ -74,12 +75,13 @@ namespace LeagueApi.Controllers
                     Losses = losses,
                     WinPercentage = winPercentage,
                     CurrentStreak = streak,
-                    StreakDescription = streakDescription
+                    StreakDescription = streakDescription,
+                    LastName = player.LastName,
                 };
             })
             .OrderByDescending(s => s.WinPercentage)
             .ThenByDescending(s => s.Wins)
-            .ThenBy(s => s.PlayerName)
+            .ThenBy(s => s.LastName)
             .ToList();
 
             return Ok(standings);

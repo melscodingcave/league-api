@@ -9,5 +9,6 @@
         public decimal WinPercentage { get; set; }
         public int CurrentStreak { get; set; }
         public string StreakDescription { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
     }
 }
